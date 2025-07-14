@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>S.A.D</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div id="bg-canvas"></div>
+    <img id="logo-img" src="logo.png" alt="S.A.D Logo">
+    <div id="content">
+        <h1>S.A.D</h1>
+        <div class="video-grid">
+            <iframe id="ytplayer" src="https://www.youtube.com/embed/FbJRLaV5RvY?enablejsapi=1" allowfullscreen></iframe>
+        </div>
+        <a href="admin.html" class="admin-link">Editor Login</a>
+    </div>
+    <audio id="loader-audio" autoplay muted loop>
+        <source src="loader_music.mp3" type="audio/mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+<script>
+  var tag = document.createElement('script');
+  tag.src = "https://www.youtube.com/iframe_api";
+  var firstScriptTag = document.getElementsByTagName('script')[0];
+  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+  var player;
+  function onYouTubeIframeAPIReady() {
+    player = new YT.Player('ytplayer', {
+      events: {
+        'onStateChange': onPlayerStateChange
+      }
+    });
+  }
+
+  function onPlayerStateChange(event) {
+    if (event.data == YT.PlayerState.PLAYING) {
+      var audio = document.getElementById("loader-audio");
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    }
+  }
+</script>
+
+<div id="custom-video-box">
+    <iframe id="custom-yt-video" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+
+<script>
+  function loadCustomVideo(url) {
+    const iframe = document.getElementById("custom-yt-video");
+    if (iframe) {
+      const videoID = url.split("v=")[1]?.split("&")[0] || "";
+      if (videoID) {
+        iframe.src = "https://www.youtube.com/embed/" + videoID + "?autoplay=1&rel=0";
+      }
+    }
+  }
+  // Example default video for demo
+  loadCustomVideo("https://www.youtube.com/watch?v=FbJRLaV5RvY");
+</script>
+
+<script>
+  function loadCustomVideo(url) {
+    const iframe = document.getElementById("custom-yt-video");
+    if (iframe) {
+      const videoID = url.split("v=")[1]?.split("&")[0] || "";
+      if (videoID) {
+        iframe.src = "https://www.youtube.com/embed/" + videoID + "?autoplay=1&rel=0";
+      }
+    }
+  }
+
+  // Get saved video URL from localStorage if it exists
+  const saved = localStorage.getItem("customYT");
+  if (saved) {
+    loadCustomVideo(saved);
+  } else {
+    loadCustomVideo("https://www.youtube.com/watch?v=FbJRLaV5RvY");
+  }
+</script>
+</body>
+
+
+
+</html>
