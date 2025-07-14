@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>S.A.D Admin</title>
+    <style>
+        body {
+            background: black;
+            color: white;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            width: 300px;
+        }
+        button {
+            background-color: white;
+            color: black;
+            cursor: pointer;
+        }
+        #edit-panel { display: none; }
+    </style>
+</head>
+<body>
+    <div id="login-panel">
+        <h2>Admin Login</h2>
+        <input id="user" placeholder="Username"><br>
+        <input id="pass" type="password" placeholder="Password"><br>
+        <button onclick="verify()">Login</button>
+    </div>
+
+    <div id="edit-panel">
+        <h2>Change Global YouTube Video</h2>
+        <input id="yt-url" placeholder="Paste full YouTube URL" />
+        <button onclick="saveToGitHub()">Save Globally</button>
+    </div>
+
+    <script>
+        function verify() {
+            const u = document.getElementById("user").value;
+            const p = document.getElementById("pass").value;
+            if (u === "custom" && p === "bypass1234") {
+                document.getElementById("login-panel").style.display = "none";
+                document.getElementById("edit-panel").style.display = "block";
+            } else {
+                alert("Invalid credentials.");
+            }
+        }
+
+        async function saveToGitHub() {
+            const ytURL = document.getElementById("yt-url").value;
+            if (!ytURL.includes("youtube.com")) {
+                alert("Please enter a valid YouTube link.");
+                return;
+            }
+
+            const token = "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";
+            const repo = "Terrencewashere/sad-website";
+            const path = "config.json";
+
+            const newData = {
+                message: "Update video URL",
+                committer: { name: "SAD Bot", email: "sad@auto.bot" },
+                content: btoa(JSON.stringify({ video_url: ytURL }))
+            };
+
+            const getSha = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`);
+            const shaData = await getSha.json();
+            newData.sha = shaData.sha;
+
+            const result = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newData)
+            });
+
+            if (result.ok) {
+                alert("Video updated!");
+                window.location.href = "index.html";
+            } else {
+                alert("Update failed.");
+            }
+        }
+    </script>
+</body>
+</html>
